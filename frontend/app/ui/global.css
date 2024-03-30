@@ -2,19 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='number'] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+.shorten-button {
+  background: #5F55EB;
+  font-weight: bold;
 }
 
-input[type='number']::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.shorten-button:disabled,
+.shorten-button[disabled] {
+  background: #C9C4F4;
+  font-weight: bold;
 }
 
 .success {
