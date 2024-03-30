@@ -47,10 +47,7 @@ export default function Page() {
 
     const onSubmit = async (e: any) => {
         e.preventDefault();
-
-        setShortUrl('');
-        setError('');
-        setCopiedToClipboard(false);
+        reset();
 
         try {
             const res = await fetch(SHORTEN_URL, {
@@ -74,6 +71,12 @@ export default function Page() {
         }
     }
 
+    const reset = () => {
+      setError(undefined);
+      setShortUrl(undefined);
+      setCopiedToClipboard(false);
+    };
+
     return (
         <>
             <form className=" flex w-full flex-col justify-left items-left " onSubmit={onSubmit}>
@@ -82,14 +85,20 @@ export default function Page() {
                     <input
                         type="text" name="url" placeholder="http://example.com/foo/bar"
                         className=" border p-2 px-4 rounded outline-none "
-                        onChange={e => setLongUrl(e.target.value)}
+                        onChange={e => {
+                            setLongUrl(e.target.value);
+                            reset();
+                        }}
                     />
 
                     <label>Enter custom URL slug</label>
                     <input
                         type="text" name="slug" placeholder="(Optional)"
                         className=" border p-2 px-4 rounded outline-none "
-                        onChange={e => setCustomSlug(e.target.value)}
+                        onChange={e => {
+                            setCustomSlug(e.target.value);
+                            reset();
+                        }}
                     />
 
                     <button
