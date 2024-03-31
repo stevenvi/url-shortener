@@ -4,7 +4,7 @@ import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/o
 import { useState } from 'react'
 
 const SHORTEN_HOST = process.env.SHORTEN_HOST || 'http://localhost:8080';
-const SHORTEN_PATH = process.env.SHORTEN_PATH || '/api/shorten';
+const SHORTEN_PATH = process.env.SHORTEN_PATH || 'api/shorten';
 const SHORTEN_URL = `${SHORTEN_HOST}/${SHORTEN_PATH}`;
 
 export default function Page() {
@@ -45,6 +45,15 @@ export default function Page() {
         }
     };
 
+    const parseJson = async (jsonPromise: Promise<object>): Promise<any> => {
+        try {
+            return await jsonPromise;
+        } catch (e) {
+            // Invalid json, just ignore it
+            return { errors: [ 'Unparsable response. See dev tools for more details.' ]};
+        }
+    }
+
     const onSubmit = async (e: any) => {
         e.preventDefault();
         reset();
@@ -56,14 +65,14 @@ export default function Page() {
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            const json = await res.json();
-            console.log(json);
+            const json = await parseJson(res.json());
             if (res.ok) {
                 // shortening was successful
-                setShortUrl(json.url);
+                setShortUrl(json.data?.url);
             } else {
                 // show that it responded with an error
-                setError(json.error);
+                // for simplicity, just show the first error
+                setError(json.errors?.[0]);
             }
         } catch (e: any) {
             // Connection error
