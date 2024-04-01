@@ -1,11 +1,8 @@
-import { ShortenDb } from './shorten-db';
+import ShortenDb from './shorten-db';
 import { HOST, PORT } from '../config';
 import { ApiError, ErrorTypes } from '../errors/Errors';
 
-/** Copied from https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number */
-const isNumeric = (num: any) => (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) && !isNaN(num as number);
-
-export class ShortenService {
+export default class ShortenService {
     readonly db: ShortenDb;
 
     constructor(db: ShortenDb) {
@@ -33,7 +30,8 @@ export class ShortenService {
 
     /** Checks if the input slug is a valid vanity slug */
     isVanitySlug(slug: string): boolean {
-        return !isNumeric(slug);
+        const regex = /^[a-zA-Z][-a-zA-Z0-9]*$/;
+        return regex.test(slug);
     }
 
     /** Converts the id of a db row into a unique slug */
@@ -61,8 +59,6 @@ export class ShortenService {
     }
 
     async getUrlForSlug(slug: string): Promise<string> {
-        console.log(`Finding url for id slug ${slug}`);
-
         // Check if this is a numeric slug or a vanity slug
         let url: string | undefined;
         if (this.isVanitySlug(slug)) {
@@ -95,7 +91,7 @@ export class ShortenService {
     }
 
     getShortenedUrlForSlug(slug: string): string {
-        // TODO: Schema should support https
+        // TODO: Schema should support https, probably be config-driven
         return `http://${HOST}:${PORT}/${slug}`;
     }
 }

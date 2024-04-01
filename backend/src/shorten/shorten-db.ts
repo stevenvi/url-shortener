@@ -1,13 +1,13 @@
 import { Client } from 'pg';
 import { ApiError, ErrorTypes } from '../errors/Errors';
 
-const PG_COLLISION_ERROR = '23505';
+export const PG_COLLISION_ERROR = '23505';
 
-export class ShortenDb {
+export default class ShortenDb {
     readonly dbClient: Client;
 
-    constructor() {
-        this.dbClient = new Client();
+    constructor(client?: Client) {
+        this.dbClient = client ?? new Client();
     }
 
     /**
@@ -36,11 +36,11 @@ export class ShortenDb {
 
     /**
      * Finds the url associated with a numeric id in the database
-     * @param id {number} The id to look up
+     * @param id The id to look up
      * @return The url associated with the id in the database, or undefined if not found
      */
-    async getUrlForId(id: number | string): Promise<string | undefined> {
-        const result = await this.dbClient.query('SELECT url FROM urls WHERE id=$1', [id as String]);
+    async getUrlForId(id: number): Promise<string | undefined> {
+        const result = await this.dbClient.query('SELECT url FROM urls WHERE id=$1', [id]);
         return result?.rows?.[0]?.url;
     }
 
@@ -64,6 +64,17 @@ export class ShortenDb {
         return result?.rows?.[0]?.urlId;
     }
 
+    /** Directly adds a URL to the urls database */
+    async insertUrlQuery(url: string): Promise<number | undefined> {
+        const result = await this.dbClient.query('INSERT INTO urls (url) VALUES ($1) RETURNING id', [url]);
+        return result?.rows?.[0]?.id;
+    }
+
+    /** Directly adds a slug to the slugs database */
+    async insertSlugQuery(slug: string, urlId: number): Promise<void> {
+        await this.dbClient.query('INSERT INTO slugs (slug, urlId) VALUES($1, $2)', [slug, urlId.toString()]);
+    }
+
     /**
      * Inserts a new url into the database, with an optional vanity slug
      * @param url {string} The long url to be inserted into the shortened url database
@@ -76,8 +87,7 @@ export class ShortenDb {
         if (!id) {
             // Does not exist yet, insert now
             try {
-                const result = await this.dbClient.query('INSERT INTO urls (url) VALUES ($1) RETURNING id', [url]);
-                id = result?.rows?.[0]?.id;
+                id = await this.insertUrlQuery(url);
             } catch (e: any) {
                 if (e.code === PG_COLLISION_ERROR) {
                     // Collision. Assume a race occurred and another process has inserted this URL.
@@ -113,7 +123,7 @@ export class ShortenDb {
 
         // Insert the new slug
         try {
-            await this.dbClient.query('INSERT INTO slugs (slug, urlId) VALUES($1, $2)', [slug, id.toString()]);
+            await this.insertSlugQuery(slug, id);
             return slug;
         } catch (e: any) {
             if (e.code === PG_COLLISION_ERROR) {
