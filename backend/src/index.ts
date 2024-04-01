@@ -5,8 +5,8 @@ import express, { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { Server } from 'http';
 
-import { ShortenDb } from './shorten/shorten-db';
-import { ShortenService } from './shorten/shorten-service';
+import ShortenDb from './shorten/shorten-db';
+import ShortenService from './shorten/shorten-service';
 import { registerErrorHandlers, registerMiddleware } from './webapp/middleware';
 
 const webapp = express();
