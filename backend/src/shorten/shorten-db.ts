@@ -78,7 +78,7 @@ export class ShortenDb {
             try {
                 const result = await this.dbClient.query('INSERT INTO urls (url) VALUES ($1) RETURNING id', [url]);
                 id = result?.rows?.[0]?.id;
-            } catch (e) {
+            } catch (e: any) {
                 if (e.code === PG_COLLISION_ERROR) {
                     // Collision. Assume a race occurred and another process has inserted this URL.
                     // In this case, we can try to fetch again and we should find it now.
@@ -115,7 +115,7 @@ export class ShortenDb {
         try {
             await this.dbClient.query('INSERT INTO slugs (slug, urlId) VALUES($1, $2)', [slug, id.toString()]);
             return slug;
-        } catch (e) {
+        } catch (e: any) {
             if (e.code === PG_COLLISION_ERROR) {
                 // Collision. Check if by any chance this slug is for the id we are attempting to pair.
                 if (await this.getUrlIdForVanitySlug(slug) === id) {

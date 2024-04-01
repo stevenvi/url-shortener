@@ -97,7 +97,8 @@ export class ShortenService {
     }
 
     getShortenedUrlForSlug(slug: string): string {
-        return `${HOST}:${PORT}/${slug}`;
+        // TODO: Schema should support https
+        return `http://${HOST}:${PORT}/${slug}`;
     }
 }
 

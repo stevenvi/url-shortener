@@ -16,6 +16,7 @@ const webapp = express();
 
 // Configure webapp
 registerMiddleware(webapp);
+webapp.get('/healthcheck', healthcheck);
 webapp.get('/:id', asyncHandler(redirect));
 webapp.get('/api/redirect/:id', asyncHandler(getRedirect));
 webapp.post('/api/shorten', asyncHandler(shorten));
@@ -40,6 +41,9 @@ async function getRedirect(req: Request, res: Response): Promise<void> {
 	await getRedirectAnd(req, res, (url: string) => res.status(200).send({ data: { url } }));
 }
 
+function healthcheck(req: Request, res: Response): void {
+	res.status(204).send();
+}
 
 
 // Initialize server
@@ -66,7 +70,7 @@ async function init() {
 init().then(() => {
 	console.log('URL Shortener Backend is ready to use');
 }).catch(e => {
-	console.error(`Startup error: ${e.message}`);
+	console.error(`Startup error: ${e.stack}`);
 });
 
 // Clean up when shutdown is requested

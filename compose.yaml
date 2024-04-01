@@ -1,18 +1,48 @@
 services:
   postgres:
     image: postgres
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_PASSWORD=
-  api:
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 1s
+
+  backend:
     build: ./backend
     ports:
       - 8080:8080
+    environment:
+      - PGHOST=postgres
+      - PGPASSWORD=password
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/healthcheck"]
+      interval: 10s
+      timeout: 60s
+      retries: 3
+      start_period: 5s
+
   frontend:
     build: ./frontend
-    ports: 3000:3000
+    ports:
+      - 3000:3000
+    environment:
+      - SHORTEN_API_HOST=http://backend:8080
     depends_on:
-      - api
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000"]
+      interval: 10s
+      timeout: 60s
+      retries: 3
+      start_period: 10s

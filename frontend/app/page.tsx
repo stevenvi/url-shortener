@@ -3,8 +3,8 @@
 import { ClipboardIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react'
 
-const SHORTEN_HOST = process.env.SHORTEN_HOST || 'http://localhost:8080';
-const SHORTEN_PATH = process.env.SHORTEN_PATH || 'api/shorten';
+const SHORTEN_HOST = process.env.SHORTEN_API_HOST || 'http://localhost:8080';
+const SHORTEN_PATH = process.env.SHORTEN_API_PATH || 'api/shorten';
 const SHORTEN_URL = `${SHORTEN_HOST}/${SHORTEN_PATH}`;
 
 export default function Page() {

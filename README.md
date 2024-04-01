@@ -5,8 +5,6 @@ Node.JS on the backend and React/Next.JS on the frontend.
 
 ## Prerequisites
 - Docker (see https://www.docker.com/get-started/)
-- Node.JS 21+ (current stable version at the time this was written)
-- npm
 - All other dependencies should be automatically downloaded
 
 ## Running
@@ -27,4 +25,26 @@ And finally, to stop it, you can run
 ```
 $ docker compose down
 ```
- 
+
+## Development
+To start a postgres server manually, you can use the following command:
+```
+$ docker run -e POSTGRES_PASSWORD=<PASSWORD> --publish 5432:5432 postgres
+```
+
+To run a development instance of the backend which will auto-reload via nodemon,
+ensure you have the appropriate node dev tools installed and run:
+```
+$ cd backend
+$ npm install
+$ npm run dev
+```
+
+To run a development instance of the frontend, which will similarly refresh
+as code is changed, ensure you have the appropriate node dev tools installed
+and run:
+```
+$ cd frontend
+$ npm install
+$ npm run dev
+```
