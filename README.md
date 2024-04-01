@@ -3,6 +3,32 @@
 This demo project contains everything you need to create a URL shortener service using Docker containers, with
 Node.JS on the backend and React/Next.JS on the frontend.
 
+***This is for demonstration purposes only and is not intended for production use.***
+
+## Features
+* UI for entering long URL and optional vanity slug 
+* DB to store records in
+* Standard slugs are strictly monotonically increasing numbers and are guaranteed to be unique
+* Vanity slugs are enforced as unique
+* Automatic redirection when accessing short url
+* 404 response for invalid short urls
+* URL validation
+* Error messages for invalid URLs
+* Copy to clipboard functionality
+
+## Known Issues
+* No rate-limiting. This should be handled on the load balancer.
+* Configuration feels a little hardcoded still despite efforts to reduce it. This is easiest to get running when all containers are on localhost.
+* No unit testing on frontend.
+* No integration testing of API endpoints.
+
+## Future Work
+* Rather than a base-10 id slug, use alphanumeric characters to reduce the overall length of the URL
+* Randomization to the improved id slug to prevent guessing other shortened URLs
+* Redirect from the frontend for improved user experience on errors
+* Is Next.JS useful here or should it be removed?
+* Additional code comments
+
 ## Prerequisites
 - Docker (see https://www.docker.com/get-started/)
 - All other dependencies should be automatically downloaded
