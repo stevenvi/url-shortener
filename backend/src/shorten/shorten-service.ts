@@ -2,12 +2,10 @@ import { ShortenDb } from './shorten-db';
 import { HOST, PORT } from '../config';
 import { ApiError, ErrorTypes } from '../errors/Errors';
 
-
 /** Copied from https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number */
-const isNumeric = (num: any) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num as number);
+const isNumeric = (num: any) => (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) && !isNaN(num as number);
 
 export class ShortenService {
-
     readonly db: ShortenDb;
 
     constructor(db: ShortenDb) {
@@ -66,7 +64,7 @@ export class ShortenService {
         console.log(`Finding url for id slug ${slug}`);
 
         // Check if this is a numeric slug or a vanity slug
-        let url: string|undefined;
+        let url: string | undefined;
         if (this.isVanitySlug(slug)) {
             url = await this.db.getUrlForVanitySlug(slug);
         } else {
@@ -86,7 +84,7 @@ export class ShortenService {
         this.validateUrl(url);
         if (slug) this.validateVanitySlug(slug);
 
-        const id = await this.db.insertUrl(url, slug)
+        const id = await this.db.insertUrl(url, slug);
         if (slug) {
             // A custom slug was inserted, so return that slug
             return slug;
@@ -101,4 +99,3 @@ export class ShortenService {
         return `http://${HOST}:${PORT}/${slug}`;
     }
 }
-

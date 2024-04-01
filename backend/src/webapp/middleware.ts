@@ -10,8 +10,8 @@ const GENERIC_ERROR_MSG = 'An internal error has occurred';
 export function errorHandlingMiddleware(err: Error, req: Request, res: Response, next: NextFunction): void {
     if (!res.headersSent) {
         if (err instanceof ApiError) {
-            const msg = (err.type.informUser ? err.type.message : GENERIC_ERROR_MSG);
-            res.status(err.type.statusCode).send({errors: [msg]});
+            const msg = err.type.informUser ? err.type.message : GENERIC_ERROR_MSG;
+            res.status(err.type.statusCode).send({ errors: [msg] });
         } else {
             console.error(`Possible unlogged error: ${err.stack}`);
             res.status(500).send({ errors: [GENERIC_ERROR_MSG] });

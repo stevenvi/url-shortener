@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 .shorten-button {
-  background: #5F55EB;
-  font-weight: bold;
+    background: #5f55eb;
+    font-weight: bold;
 }
 
 .shorten-button:disabled,
 .shorten-button[disabled] {
-  background: #C9C4F4;
-  font-weight: bold;
+    background: #c9c4f4;
+    font-weight: bold;
 }
 
 .success {
-  color: darkgreen;
+    color: darkgreen;
 }
 
 .failure {
-  color: darkred;
+    color: darkred;
 }

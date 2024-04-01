@@ -7,11 +7,10 @@ export class ApiError extends Error {
     }
 }
 
-
 type ErrorType = {
-    statusCode: number,
-    message: string,
-    informUser: boolean,
+    statusCode: number;
+    message: string;
+    informUser: boolean;
 };
 
 export const ErrorTypes: Record<string, ErrorType> = {
