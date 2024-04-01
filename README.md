@@ -7,7 +7,7 @@ Node.JS on the backend and React/Next.JS on the frontend.
 
 ## Features
 * UI for entering long URL and optional vanity slug 
-* DB to store records in
+* Automatic DB creation
 * Standard slugs are strictly monotonically increasing numbers and are guaranteed to be unique
 * Vanity slugs are enforced as unique
 * Automatic redirection when accessing short url
@@ -28,6 +28,7 @@ Node.JS on the backend and React/Next.JS on the frontend.
 * Redirect from the frontend for improved user experience on errors
 * Is Next.JS useful here or should it be removed?
 * Additional code comments
+* Document configuration values
 
 ## Prerequisites
 - Docker (see https://www.docker.com/get-started/)
@@ -43,11 +44,11 @@ To run, simply use this command:
 ```
 $ docker compose up -d
 ```
-This will run in detached mode. You can confirm that things are running with
-```
-$ docker ps
-```
-And finally, to stop it, you can run
+This will run in detached mode. You can watch each element coming up.
+
+Then direct your web browser to http://localhost:3000 and you can use the UI.
+
+When you are done, you can stop it with the following command:
 ```
 $ docker compose down
 ```
